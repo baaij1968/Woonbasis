@@ -1,0 +1,8 @@
+{
+  "name": "Woonbasis Opmeet App",
+  "description": "Een professionele tool voor Woonbasis medewerkers om meetgegevens voor gordijnen en vloeren vast te leggen. De gegevens zijn gestructureerd voor eenvoudige verwerking en kunnen worden afgedrukt of gekopieerd.",
+  "requestFramePermissions": [
+    "camera",
+    "geolocation"
+  ]
+}
