@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 // const supabaseUrl = 'https://jouw-unieke-project-id.supabase.co';
 // const supabaseKey = 'jouw-lange-anon-public-key-begint-met-ey...';
 
-// GEGEVENS ZIJN INGEVULD:
+// PLAK HIER UW EIGEN GEGEVENS:
 const supabaseUrl = 'https://hgqramsewulixmanlynk.supabase.co';
 const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImhncXJhbXNld3VsaXhtYW5seW5rIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTgzNzMzNzAsImV4cCI6MjA3Mzk0OTM3MH0.BLwR0xjpMu-jmRyhEZxKBr96MY47Jsbv0wC0I7De0wQ';
 
