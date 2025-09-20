@@ -37,6 +37,7 @@ const CurtainForm: React.FC<CurtainFormProps> = ({ curtains, setCurtains }) => {
             colorNumber: '',
             type: 'Overgordijn', 
             pleatType: 'Enkele plooi',
+            runnerDistance: '',
             headerSize: '',
             mounting: 'Wand', 
             hemType: 'Loodveter',
@@ -71,8 +72,8 @@ const CurtainForm: React.FC<CurtainFormProps> = ({ curtains, setCurtains }) => {
                                     <input type="text" value={curtain.room} onChange={(e) => handleChange(index, 'room', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Woonkamer"/>
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Kleurnummer</label>
-                                    <input type="text" value={curtain.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} maxLength={8} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. 1234AB"/>
+                                    <label className="block text-sm font-medium text-gray-700">Leverancier en kleurnummer</label>
+                                    <input type="text" value={curtain.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. De Ploeg / Nevada 12"/>
                                 </div>
                             </div>
                         </div>
@@ -94,6 +95,12 @@ const CurtainForm: React.FC<CurtainFormProps> = ({ curtains, setCurtains }) => {
                                 <option>Platte plooi</option>
                             </select>
                         </div>
+                        {curtain.pleatType === 'Wave plooi' && (
+                             <div>
+                                <label className="block text-sm font-medium text-gray-700">Runnerafstand (cm)</label>
+                                 <input type="number" value={curtain.runnerDistance || ''} onChange={(e) => handleChange(index, 'runnerDistance', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="8"/>
+                            </div>
+                        )}
                         <div>
                             <label className="block text-sm font-medium text-gray-700">Hoofdje (cm)</label>
                              <input type="number" value={curtain.headerSize} onChange={(e) => handleChange(index, 'headerSize', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="1.5"/>

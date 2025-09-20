@@ -79,8 +79,8 @@ const FloorForm: React.FC<FloorFormProps> = ({ floors, setFloors }) => {
                                         <input type="text" value={floor.room} onChange={(e) => handleChange(index, 'room', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Slaapkamer"/>
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-medium text-gray-700">Kleurnummer</label>
-                                        <input type="text" value={floor.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} maxLength={8} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. 1234AB"/>
+                                        <label className="block text-sm font-medium text-gray-700">Leverancier en kleurnummer</label>
+                                        <input type="text" value={floor.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. Quick-Step / IM1848"/>
                                     </div>
                                 </div>
                             </div>
@@ -92,6 +92,8 @@ const FloorForm: React.FC<FloorFormProps> = ({ floors, setFloors }) => {
                                     <option>Tapijt</option>
                                     <option>Vloerbedekking</option>
                                     <option>Vinyl</option>
+                                    <option>Marmoleum</option>
+                                    <option>Hout</option>
                                 </select>
                             </div>
                             <div>

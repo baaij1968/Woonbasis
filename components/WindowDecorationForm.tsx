@@ -39,7 +39,9 @@ const WindowDecorationForm: React.FC<WindowDecorationFormProps> = ({ windowDecor
             mounting: 'In de dag',
             width: '',
             height: '',
+            mountingHeight: '',
             controlSide: 'Links',
+            controlHeight: '',
             notes: ''
         }]);
     };
@@ -68,8 +70,8 @@ const WindowDecorationForm: React.FC<WindowDecorationFormProps> = ({ windowDecor
                                     <input type="text" value={deco.room} onChange={(e) => handleChange(index, 'room', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Keuken" />
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Kleurnummer</label>
-                                    <input type="text" value={deco.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} maxLength={8} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. 1234AB"/>
+                                    <label className="block text-sm font-medium text-gray-700">Leverancier en kleurnummer</label>
+                                    <input type="text" value={deco.colorNumber} onChange={(e) => handleChange(index, 'colorNumber', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. Luxaflex / 9001"/>
                                 </div>
                             </div>
                         </div>
@@ -81,6 +83,9 @@ const WindowDecorationForm: React.FC<WindowDecorationFormProps> = ({ windowDecor
                                 <option>Plissé</option>
                                 <option>Duette</option>
                                 <option>Vouwgordijn</option>
+                                <option>Shutters</option>
+                                <option>Geweven Hout</option>
+                                <option>Fractions</option>
                             </select>
                         </div>
                         <div>
@@ -98,13 +103,23 @@ const WindowDecorationForm: React.FC<WindowDecorationFormProps> = ({ windowDecor
                             <label className="block text-sm font-medium text-gray-700">Hoogte (cm)</label>
                             <input type="number" value={deco.height} onChange={(e) => handleChange(index, 'height', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="180" />
                         </div>
-                        <div className="md:col-span-2">
+                        <div>
+                            <label className="block text-sm font-medium text-gray-700">Montagehoogte (cm)</label>
+                            <input type="number" value={deco.mountingHeight} onChange={(e) => handleChange(index, 'mountingHeight', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="220" />
+                        </div>
+                        <div>
                              <label className="block text-sm font-medium text-gray-700">Bedieningszijde</label>
                             <select value={deco.controlSide} onChange={(e) => handleChange(index, 'controlSide', e.target.value as WindowDecorationMeasurement['controlSide'])} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm">
                                 <option>Links</option>
                                 <option>Rechts</option>
                             </select>
                         </div>
+                        {deco.type === 'Fractions' && (
+                             <div>
+                                <label className="block text-sm font-medium text-gray-700">Bedieningshoogte (cm)</label>
+                                 <input type="number" value={deco.controlHeight || ''} onChange={(e) => handleChange(index, 'controlHeight', e.target.value)} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="150"/>
+                            </div>
+                        )}
                         <div className="md:col-span-2">
                             <label className="block text-sm font-medium text-gray-700">Opmerkingen</label>
                             <textarea value={deco.notes} onChange={(e) => handleChange(index, 'notes', e.target.value)} rows={3} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-brand-DEFAULT focus:ring-brand-DEFAULT sm:text-sm" placeholder="Bijv. Kettinglengte 150cm"></textarea>

@@ -19,6 +19,7 @@ export interface CurtainMeasurement {
     // Stofsoort
     type: 'Overgordijn' | 'Inbetween' | 'Vitrage';
     pleatType: string; // Plooi-type, als tekstinvoer voor flexibiliteit
+    runnerDistance?: string;
     headerSize: string; // Hoofdje in cm
     // Montage
     mounting: 'Wand' | 'Plafond';
@@ -34,7 +35,7 @@ export interface FloorMeasurement {
     id: number;
     room: string;
     colorNumber: string;
-    type: 'Laminaat' | 'PVC' | 'Tapijt' | 'Vloerbedekking' | 'Vinyl';
+    type: 'Laminaat' | 'PVC' | 'Tapijt' | 'Vloerbedekking' | 'Vinyl' | 'Marmoleum' | 'Hout';
     length: string;
     width: string;
     skirting: boolean; // Plinten
@@ -47,11 +48,13 @@ export interface WindowDecorationMeasurement {
     id: number;
     room: string;
     colorNumber: string;
-    type: 'Rolgordijn' | 'Jaloezie' | 'Plissé' | 'Duette' | 'Vouwgordijn';
+    type: 'Rolgordijn' | 'Jaloezie' | 'Plissé' | 'Duette' | 'Vouwgordijn' | 'Shutters' | 'Geweven Hout' | 'Fractions';
     mounting: 'In de dag' | 'Op de dag';
     width: string;
     height: string;
+    mountingHeight: string;
     controlSide: 'Links' | 'Rechts';
+    controlHeight?: string;
     notes: string;
     photo?: string;
 }

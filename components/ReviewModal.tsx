@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Customer, CurtainMeasurement, FloorMeasurement, WindowDecorationMeasurement } from '../types';
 import ClipboardIcon from './icons/ClipboardIcon';
@@ -77,7 +76,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ customer, curtains, floors, w
                             <p><strong>Telefoon:</strong> {customer.phone || '-'}</p>
                             <p><strong>Email:</strong> {customer.email || '-'}</p>
                             <p><strong>Referentie:</strong> {customer.reference || '-'}</p>
-                            <p><strong>Datum:</strong> {formatDateForDisplay(customer.date)}</p>
+                            <p><strong>Meetdatum:</strong> {formatDateForDisplay(customer.date)}</p>
                         </div>
                     </div>
 
@@ -88,10 +87,13 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ customer, curtains, floors, w
                         <div className="space-y-4">
                             {curtains.filter(c => c.room || c.width || c.height).map((curtain, index) => (
                                 <div key={index} className="p-3 border rounded-md bg-gray-50 text-sm break-inside-avoid">
-                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {curtain.room || 'N.v.t.'}{curtain.colorNumber && <span className="font-normal text-gray-600"> (Kleur: {curtain.colorNumber})</span>}</p>
+                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {curtain.room || 'N.v.t.'}{curtain.colorNumber && <span className="font-normal text-gray-600"> (Leverancier/kleur: {curtain.colorNumber})</span>}</p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1">
                                         <p><strong>Stofsoort:</strong> {curtain.type}</p>
                                         <p><strong>Plooi:</strong> {curtain.pleatType}</p>
+                                        {curtain.pleatType === 'Wave plooi' && curtain.runnerDistance && (
+                                            <p><strong>Runnerafstand:</strong> {curtain.runnerDistance} cm</p>
+                                        )}
                                         <p><strong>Hoofdje:</strong> {curtain.headerSize ? `${curtain.headerSize} cm` : '-'}</p>
                                         <p><strong>Montage:</strong> {curtain.mounting}</p>
                                         <p><strong>Zoom:</strong> {curtain.hemType}</p>
@@ -119,7 +121,7 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ customer, curtains, floors, w
                         <div className="space-y-4">
                             {floors.filter(f => f.room || f.length || f.width).map((floor, index) => (
                                 <div key={index} className="p-3 border rounded-md bg-gray-50 text-sm break-inside-avoid">
-                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {floor.room || 'N.v.t.'}{floor.colorNumber && <span className="font-normal text-gray-600"> (Kleur: {floor.colorNumber})</span>}</p>
+                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {floor.room || 'N.v.t.'}{floor.colorNumber && <span className="font-normal text-gray-600"> (Leverancier/kleur: {floor.colorNumber})</span>}</p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1">
                                         <p className="sm:col-span-2 md:col-span-3"><strong>Type vloer:</strong> {floor.type}</p>
                                         <p><strong>Afmeting (L×B):</strong> {floor.length && floor.width ? `${floor.length}m × ${floor.width}m` : '-'}</p>
@@ -148,12 +150,16 @@ const ReviewModal: React.FC<ReviewModalProps> = ({ customer, curtains, floors, w
                         <div className="space-y-4">
                             {windowDecorations.filter(d => d.room || d.width || d.height).map((deco, index) => (
                                 <div key={index} className="p-3 border rounded-md bg-gray-50 text-sm break-inside-avoid">
-                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {deco.room || 'N.v.t.'}{deco.colorNumber && <span className="font-normal text-gray-600"> (Kleur: {deco.colorNumber})</span>}</p>
+                                    <p className="font-bold text-base mb-2">Meting #{index + 1}: {deco.room || 'N.v.t.'}{deco.colorNumber && <span className="font-normal text-gray-600"> (Leverancier/kleur: {deco.colorNumber})</span>}</p>
                                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-4 gap-y-1">
                                         <p><strong>Type:</strong> {deco.type}</p>
                                         <p><strong>Montage:</strong> {deco.mounting}</p>
                                         <p><strong>Afmeting (B×H):</strong> {deco.width && deco.height ? `${deco.width}cm × ${deco.height}cm` : '-'}</p>
+                                        <p><strong>Montagehoogte:</strong> {deco.mountingHeight ? `${deco.mountingHeight} cm` : '-'}</p>
                                         <p><strong>Bediening:</strong> {deco.controlSide}</p>
+                                        {deco.type === 'Fractions' && deco.controlHeight && (
+                                            <p><strong>Bedieningshoogte:</strong> {deco.controlHeight} cm</p>
+                                        )}
                                     </div>
                                     {deco.notes && <p className="mt-2 col-span-full"><strong>Opmerkingen:</strong> {deco.notes}</p>}
                                     {deco.photo && (

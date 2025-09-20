@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Header from './components/Header';
 import MeasurementForm from './components/MeasurementForm';
@@ -30,6 +29,7 @@ const initialCurtainMeasurement: CurtainMeasurement = {
     colorNumber: '',
     type: 'Overgordijn',
     pleatType: 'Enkele plooi',
+    runnerDistance: '',
     headerSize: '',
     mounting: 'Wand',
     hemType: 'Loodveter',
@@ -59,7 +59,9 @@ const initialWindowDecorationMeasurement: WindowDecorationMeasurement = {
     mounting: 'In de dag',
     width: '',
     height: '',
+    mountingHeight: '',
     controlSide: 'Links',
+    controlHeight: '',
     notes: '',
 };
 
