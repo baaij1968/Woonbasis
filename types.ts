@@ -65,6 +65,7 @@ export interface Project {
     curtains: CurtainMeasurement[];
     floors: FloorMeasurement[];
     windowDecorations: WindowDecorationMeasurement[];
+    created_at?: string; // Toegevoegd voor Supabase
 }
 
 export interface Appointment {

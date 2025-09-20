@@ -7,6 +7,7 @@ import CalendarView from './components/CalendarView';
 import ClientView from './components/ClientView';
 import { Customer, CurtainMeasurement, FloorMeasurement, WindowDecorationMeasurement, Project, Appointment, Settings } from './types';
 import { getTravelTime } from './services/trafficService';
+import { supabase } from './services/supabaseClient'; // Import Supabase client
 
 // Initial state for new forms
 const initialCustomer: Customer = {
@@ -77,6 +78,7 @@ const App: React.FC = () => {
     const [view, setView] = useState<View>('form');
     const [projects, setProjects] = useState<Project[]>([]);
     const [settings, setSettings] = useState<Settings>(initialSettings);
+    const [isLoading, setIsLoading] = useState(true); // Added for loading state
 
     // Form state
     const [customer, setCustomer] = useState<Customer>(initialCustomer);
@@ -90,30 +92,36 @@ const App: React.FC = () => {
     const [selectedCustomerId, setSelectedCustomerId] = useState<string | null>(null);
     const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
 
-    // Load data from localStorage on mount
+    // Load data from Supabase on mount
     useEffect(() => {
-        try {
-            const savedProjects = localStorage.getItem('woonbasis_projects');
-            if (savedProjects) {
-                setProjects(JSON.parse(savedProjects));
+        const fetchProjects = async () => {
+            setIsLoading(true);
+            const { data, error } = await supabase
+                .from('projects')
+                .select('*')
+                .order('created_at', { ascending: false });
+
+            if (error) {
+                console.error('Error fetching projects:', error);
+                alert('Kon projecten niet laden vanuit de database.');
+            } else if (data) {
+                setProjects(data as Project[]);
             }
+            setIsLoading(false);
+        };
+
+        fetchProjects();
+
+        // Load settings from localStorage (can remain here)
+        try {
             const savedSettings = localStorage.getItem('woonbasis_settings');
             if (savedSettings) {
                 setSettings(JSON.parse(savedSettings));
             }
         } catch (error) {
-            console.error("Failed to load data from localStorage", error);
+            console.error("Failed to load settings from localStorage", error);
         }
     }, []);
-
-    // Save projects to localStorage
-    useEffect(() => {
-        try {
-            localStorage.setItem('woonbasis_projects', JSON.stringify(projects));
-        } catch (error) {
-            console.error("Failed to save projects to localStorage", error);
-        }
-    }, [projects]);
 
     // Save settings to localStorage
     useEffect(() => {
@@ -155,46 +163,64 @@ const App: React.FC = () => {
         setEditingProjectId(null);
     }, []);
 
-    const handleSaveAndSchedule = () => {
+    const handleSaveAndSchedule = async () => {
         let customerToSave = { ...customer };
 
         if (editingProjectId) {
-            // Update existing project
-            const updatedProjects = projects.map(p => {
-                if (p.id === editingProjectId) {
-                    return { 
-                        ...p, 
-                        customer: customerToSave, 
-                        curtains: curtains.filter(c => c.room || c.width || c.height),
-                        floors: floors.filter(f => f.room || f.length || f.width),
-                        windowDecorations: windowDecorations.filter(d => d.room || d.width || d.height)
-                    };
-                }
-                return p;
-            });
-            setProjects(updatedProjects);
-            alert('Project succesvol bijgewerkt!');
+            // Update existing project in Supabase
+            const projectToUpdate = {
+                customer: customerToSave,
+                curtains: curtains.filter(c => c.room || c.width || c.height),
+                floors: floors.filter(f => f.room || f.length || f.width),
+                windowDecorations: windowDecorations.filter(d => d.room || d.width || d.height)
+            };
+
+            const { data, error } = await supabase
+                .from('projects')
+                .update(projectToUpdate)
+                .eq('id', editingProjectId)
+                .select()
+                .single();
+
+            if (error) {
+                console.error('Error updating project:', error);
+                alert('Project kon niet worden bijgewerkt.');
+            } else if (data) {
+                setProjects(projects.map(p => p.id === editingProjectId ? data as Project : p));
+                alert('Project succesvol bijgewerkt!');
+                resetForm();
+                setView('calendar');
+            }
+
         } else {
-            // Create new project
+            // Create new project in Supabase
             if (!selectedCustomerId) {
-                // This is a new customer, give them a unique ID.
                 customerToSave.id = crypto.randomUUID();
             }
             
-            const newProject: Project = {
-                id: crypto.randomUUID(), // Project always gets a new unique ID
+            const newProject: Omit<Project, 'id' | 'created_at'> = {
                 customer: customerToSave,
                 curtains: curtains.filter(c => c.room || c.width || c.height),
                 floors: floors.filter(f => f.room || f.length || f.width),
                 windowDecorations: windowDecorations.filter(d => d.room || d.width || d.height),
             };
 
-            setProjects(prevProjects => [...prevProjects, newProject]);
-            alert('Project opgeslagen en ingepland!');
+            const { data, error } = await supabase
+                .from('projects')
+                .insert(newProject)
+                .select()
+                .single();
+            
+            if (error) {
+                console.error('Error creating project:', error);
+                alert('Project kon niet worden opgeslagen.');
+            } else if (data) {
+                setProjects(prevProjects => [data as Project, ...prevProjects]);
+                alert('Project opgeslagen en ingepland!');
+                resetForm();
+                setView('calendar');
+            }
         }
-        
-        resetForm();
-        setView('calendar');
     };
 
     const handleSelectClient = (clientId: string) => {
@@ -250,7 +276,6 @@ const App: React.FC = () => {
 
                 const timeToDeparture = departureTime.getTime() - now.getTime();
 
-                // Notify if it's time to leave (within a 1-minute window before departure)
                 if (timeToDeparture > 0 && timeToDeparture <= 60000) {
                     const notificationKey = `notif_${appt.id}`;
                     if (!sessionStorage.getItem(notificationKey)) {
@@ -264,7 +289,7 @@ const App: React.FC = () => {
         };
 
         if (Notification.permission === 'granted') {
-             const intervalId = setInterval(checkAppointments, 30000); // Check every 30 seconds
+             const intervalId = setInterval(checkAppointments, 30000);
              return () => clearInterval(intervalId);
         }
 
@@ -272,6 +297,14 @@ const App: React.FC = () => {
 
 
     const renderView = () => {
+        if (isLoading) {
+            return (
+                <div className="flex justify-center items-center h-64">
+                    <p className="text-xl font-semibold text-brand-dark">Projecten laden...</p>
+                </div>
+            );
+        }
+
         switch (view) {
             case 'form':
                 return (
