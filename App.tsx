@@ -102,8 +102,21 @@ const App: React.FC = () => {
                 .order('created_at', { ascending: false });
 
             if (error) {
-                console.error('Error fetching projects:', error);
-                alert('Kon projecten niet laden vanuit de database.');
+                console.error('Supabase Error:', { message: error.message, details: error.details, code: error.code, hint: error.hint });
+                
+                let userMessage = `Fout bij het laden van projecten: ${error.message}`;
+
+                // Provide helpful, specific advice for common Supabase issues.
+                if (error.code === '42501' || error.message.includes('security policies')) {
+                    userMessage = "Fout bij laden: Toegang geweigerd.\n\nDit wordt waarschijnlijk veroorzaakt door Row Level Security (RLS). Ga naar 'Authentication' -> 'Policies' in uw Supabase dashboard en zorg ervoor dat er een 'SELECT' (lees) policy actief is voor de 'projects' tabel.";
+                } else if (error.code === '42P01') {
+                     userMessage = "Fout bij laden: Tabel niet gevonden.\n\nDe tabel 'projects' lijkt niet te bestaan. Controleer of de naam correct is (kleine letters) in uw Supabase dashboard.";
+                } else if (error.code === '42703') {
+                     const columnName = error.message.match(/column "(.+?)" does not exist/)?.[1] || 'onbekend';
+                     userMessage = `Fout bij laden: Kolom '${columnName}' niet gevonden.\n\nDe app probeert op deze kolom te sorteren. Controleer of de kolom bestaat in de 'projects' tabel.`;
+                }
+
+                alert(userMessage);
             } else if (data) {
                 setProjects(data as Project[]);
             }
